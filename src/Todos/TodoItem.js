@@ -1,32 +1,52 @@
+import styled from 'styled-components';
 import { useState } from 'react';
-function TodoItem(props) {
+
+const Item = styled.li`
+  padding: 15px;
+  border-bottom: 1px solid lightgray;
+  text-decoration: ${(props) => (props.isDone ? 'line-through' : 'none')};
+  color: ${(props) => (props.isDone ? 'gray' : 'black')};
+
+  & i {
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  & i:last-child {
+    float: right;
+  }
+
+  & input {
+    font-size: 1rem;
+    padding: 6px 8px;
+  }
+`;
+
+function TodoItem({ title, isDone, onTodoDelete, id }) {
   const [isEditOn, setIsEditOn] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(props.title);
+  const [editedTitle, setEditedTitle] = useState(title);
   // uncheked styles item, fa-circle-thin
   // checked styles item line-through, fa-check-circle
 
-  const itemClasses = () => {
-    return props.isDone ? 'item line-through' : 'item';
-  };
   const checkCircleClasses = () => {
-    return `fa fa-${props.isDone ? 'check-circle' : 'circle-thin'}`;
+    return `fa fa-${isDone ? 'check-circle' : 'circle-thin'}`;
   };
   // add title from props
 
   const sendDeleteId = (e) => {
-    props.onTodoDelete(props.id);
+    onTodoDelete(id);
   };
 
   const handleEditLocal = () => {
     // send updated title with props
     if (isEditOn) {
-      console.log('update', props.id, editedTitle);
+      console.log('update', id, editedTitle);
     }
     setIsEditOn(!isEditOn);
   };
 
   return (
-    <li className={itemClasses()}>
+    <Item isDone={isDone}>
       <i className={checkCircleClasses()} aria-hidden='true'></i>
       {isEditOn ? (
         <input
@@ -37,7 +57,7 @@ function TodoItem(props) {
       ) : (
         <span className='text'>
           {' '}
-          {props.title} id: {props.id}{' '}
+          {title} id: {id}{' '}
         </span>
       )}
       <i
@@ -50,7 +70,7 @@ function TodoItem(props) {
         className='fa fa-trash delete-icon'
         aria-hidden='true'
       ></i>
-    </li>
+    </Item>
   );
 }
 
